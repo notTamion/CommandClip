@@ -7,6 +7,16 @@ public class SubCommand extends GenericCommand {
     }
 
     @Override
+    public SubCommand permission(String permission) {
+        return (SubCommand) super.permission(permission);
+    }
+
+    @Override
+    public SubCommand permission(String permission, String permissionMessage) {
+        return (SubCommand) super.permission(permission, permissionMessage);
+    }
+
+    @Override
     public SubCommand execute(ExecutionLogic logic) {
         return (SubCommand) super.execute(logic);
     }
@@ -17,12 +27,7 @@ public class SubCommand extends GenericCommand {
     }
 
     @Override
-    public SubCommand subCommand(SubCommand command) {
-        return (SubCommand) super.subCommand(command);
-    }
-
-    @Override
-    public SubCommand subCommand(SubCommandBuilder command) {
-        return (SubCommand) super.subCommand(command);
+    public SubCommand subCommand(String name, SubCommandBuilder command) {
+        return (SubCommand) super.subCommand(name, command);
     }
 }

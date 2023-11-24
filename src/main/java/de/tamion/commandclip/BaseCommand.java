@@ -3,6 +3,8 @@ package de.tamion.commandclip;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+
 public class BaseCommand extends GenericCommand {
 
     private final InternalCommand internalCommand;
@@ -11,6 +13,32 @@ public class BaseCommand extends GenericCommand {
     public BaseCommand(JavaPlugin plugin, String name) {
         this.plugin = plugin;
         this.internalCommand = new InternalCommand(name, this);
+    }
+
+    public BaseCommand commandDescription(String description) {
+        internalCommand.setDescription(description);
+        return this;
+    }
+
+    public BaseCommand alias(String alias) {
+        List<String> aliases = internalCommand.getAliases();
+        aliases.add(alias);
+        internalCommand.setAliases(aliases);
+        return this;
+    }
+
+    public BaseCommand permission(String permission) {
+        return (BaseCommand) super.permission(permission);
+    }
+
+    @Override
+    public BaseCommand permission(String permission, String permissionMessage) {
+        return (BaseCommand) super.permission(permission, permissionMessage);
+    }
+
+    public BaseCommand commandPermission(String permission) {
+        internalCommand.setPermission(permission);
+        return this;
     }
 
     @Override
@@ -24,13 +52,8 @@ public class BaseCommand extends GenericCommand {
     }
 
     @Override
-    public BaseCommand subCommand(SubCommand command) {
-        return (BaseCommand) super.subCommand(command);
-    }
-
-    @Override
-    public BaseCommand subCommand(SubCommandBuilder command) {
-        return (BaseCommand) super.subCommand(command);
+    public BaseCommand subCommand(String name, SubCommandBuilder command) {
+        return (BaseCommand) super.subCommand(name, command);
     }
 
     public boolean register() {

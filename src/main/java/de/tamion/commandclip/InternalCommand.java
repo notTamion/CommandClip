@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 class InternalCommand extends Command {
 
@@ -29,6 +30,9 @@ class InternalCommand extends Command {
             return false;
         }
         // Execute Execution Logic
+        if(command.permission != null && !sender.hasPermission(command.permission)) {
+            sender.sendMessage(command.permissionMessage);
+        }
         command.executionLogic.execute(sender, args);
         return true;
     }
@@ -41,7 +45,7 @@ class InternalCommand extends Command {
         }
 
         if (command.tabCompletionLogic == null) {
-            return command.subCommands.keySet().stream().toList();
+            return command.subCommands.entrySet().stream().filter(subCommandEntry -> subCommandEntry.getValue().permission == null || sender.hasPermission(subCommandEntry.getValue().permission)).map(Map.Entry::getKey).toList();
         }
         return command.tabCompletionLogic.tabComplete(sender, args);
     }

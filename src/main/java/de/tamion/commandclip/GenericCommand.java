@@ -11,6 +11,19 @@ public abstract class GenericCommand {
     HashMap<String, SubCommand> subCommands = new HashMap<>();
     ExecutionLogic executionLogic;
     TabCompletionLogic tabCompletionLogic;
+    String permission;
+    String permissionMessage = "You aren't allowed to execute this Command";
+
+    public GenericCommand permission(String permission) {
+        this.permission = permission;
+        return this;
+    }
+
+    public GenericCommand permission(String permission, String permissionMessage) {
+        this.permission = permission;
+        this.permissionMessage = permissionMessage;
+        return this;
+    }
 
     public GenericCommand execute(ExecutionLogic logic) {
         this.executionLogic = logic;
@@ -22,13 +35,8 @@ public abstract class GenericCommand {
         return this;
     }
 
-    public GenericCommand subCommand(SubCommand command) {
-        this.subCommands.put(command.name, command);
-        return this;
-    }
-
-    public GenericCommand subCommand(SubCommandBuilder command) {
-        SubCommand subCommand = command.build();
+    public GenericCommand subCommand(String name, SubCommandBuilder command) {
+        SubCommand subCommand = command.build(new SubCommand(name).permission(this.permission));
         this.subCommands.put(subCommand.name, subCommand);
         return this;
     }
@@ -42,6 +50,6 @@ public abstract class GenericCommand {
     }
 
     public interface SubCommandBuilder {
-        @NotNull SubCommand build();
+        @NotNull SubCommand build(SubCommand subCommand);
     }
 }
