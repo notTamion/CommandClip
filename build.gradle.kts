@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.tamion"
-version = "1.0.0-dev"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -18,6 +18,8 @@ dependencies {
 }
 
 java {
+    withSourcesJar()
+    withJavadocJar()
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 

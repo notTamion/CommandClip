@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,19 +21,30 @@ class InternalCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         GenericCommand command;
+        List<String> commandStack = new ArrayList<>();
         for(command = this.baseCommand; args.length > 0 && command.subCommands.containsKey(args[0]); args = removeFirst(args)) {
             command = command.subCommands.get(args[0]);
+            commandStack.add(args[0]);
         }
 
         // If the command doesn't have Execution Logic then send back usage
         if (command.executionLogic == null) {
-            sender.sendMessage(getUsage());
+            sender.sendMessage("/" + commandLabel + " " + String.join(" ", commandStack) + (commandStack.isEmpty() ? "" : " ") + (command.usage == null ? command.subCommands.keySet() : command.usage));
+            return false;
+        }
+        if(command.permission != null && !sender.hasPermission(command.permission)) {
+            sender.sendMessage(command.permissionMessage);
+            return false;
+        }
+        if(command.argTester != null && !command.argTester.test(args)) {
+            if (command.usage == null) {
+                sender.sendMessage("Invalid Arguments");
+            } else {
+                sender.sendMessage("/" + commandLabel + " " + (commandStack.isEmpty() ? "" : String.join(" ", commandStack) + " ") + (!command.subCommands.isEmpty() ? command.subCommands.keySet() + ", " : "") + command.usage);
+            }
             return false;
         }
         // Execute Execution Logic
-        if(command.permission != null && !sender.hasPermission(command.permission)) {
-            sender.sendMessage(command.permissionMessage);
-        }
         command.executionLogic.execute(sender, args);
         return true;
     }

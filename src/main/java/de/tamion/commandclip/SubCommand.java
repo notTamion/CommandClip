@@ -7,6 +7,11 @@ public class SubCommand extends GenericCommand {
     }
 
     @Override
+    public SubCommand usage(String usage) {
+        return (SubCommand) super.usage(usage);
+    }
+
+    @Override
     public SubCommand permission(String permission) {
         return (SubCommand) super.permission(permission);
     }
@@ -14,6 +19,16 @@ public class SubCommand extends GenericCommand {
     @Override
     public SubCommand permission(String permission, String permissionMessage) {
         return (SubCommand) super.permission(permission, permissionMessage);
+    }
+
+    @Override
+    public SubCommand testArgs(ArgTester tester) {
+        return (SubCommand) super.testArgs(tester);
+    }
+
+    @Override
+    public SubCommand subCommand(String name, SubCommandBuilder command) {
+        return (SubCommand) super.subCommand(name, command);
     }
 
     @Override
@@ -26,8 +41,4 @@ public class SubCommand extends GenericCommand {
         return (SubCommand) super.tabComplete(logic);
     }
 
-    @Override
-    public SubCommand subCommand(String name, SubCommandBuilder command) {
-        return (SubCommand) super.subCommand(name, command);
-    }
 }
