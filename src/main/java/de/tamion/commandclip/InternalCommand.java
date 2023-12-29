@@ -40,7 +40,7 @@ class InternalCommand extends Command {
             if (command.usage == null) {
                 sender.sendMessage("Invalid Arguments");
             } else {
-                sender.sendMessage("/" + commandLabel + " " + (commandStack.isEmpty() ? "" : String.join(" ", commandStack) + " ") + (!command.subCommands.isEmpty() ? command.subCommands.keySet() + ", " : "") + command.usage);
+                sender.sendMessage("/" + commandLabel + " " + (commandStack.isEmpty() ? "" : String.join(" ", commandStack) + " ") + (!command.subCommands.isEmpty() ? command.subCommands.keySet() + " / " : "") + command.usage);
             }
             return false;
         }
@@ -56,10 +56,12 @@ class InternalCommand extends Command {
             command = command.subCommands.get(args[0]);
         }
 
-        if (command.tabCompletionLogic == null) {
-            return command.subCommands.entrySet().stream().filter(subCommandEntry -> subCommandEntry.getValue().permission == null || sender.hasPermission(subCommandEntry.getValue().permission)).map(Map.Entry::getKey).toList();
+        List<String> completions = new ArrayList<>();
+        if (command.tabCompletionLogic != null) {
+            completions.addAll(command.tabCompletionLogic.tabComplete(sender, args));
         }
-        return command.tabCompletionLogic.tabComplete(sender, args);
+        completions.addAll(command.subCommands.entrySet().stream().filter(subCommandEntry -> subCommandEntry.getValue().permission == null || sender.hasPermission(subCommandEntry.getValue().permission)).map(Map.Entry::getKey).toList());
+        return completions;
     }
 
     private String[] removeFirst(String[] array) {

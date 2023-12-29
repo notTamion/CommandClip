@@ -16,9 +16,9 @@ public class BaseCommand extends GenericCommand {
      * @param plugin The Plugin that registers the Command
      * @param name the Command name
      */
-    public BaseCommand(JavaPlugin plugin, String name) {
-        this.plugin = plugin;
+    public BaseCommand(String name, JavaPlugin plugin) {
         this.internalCommand = new InternalCommand(name, this);
+        this.plugin = plugin;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class BaseCommand extends GenericCommand {
      * @return if the command was successfully registered
      */
     public boolean register() {
-        return Bukkit.getServer().getCommandMap().register(this.plugin.getName() + ":" + internalCommand.getName(), internalCommand);
+        return Bukkit.getServer().getCommandMap().register(this.plugin.getName(), internalCommand);
     }
 
 
