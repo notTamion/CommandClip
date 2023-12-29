@@ -1,13 +1,20 @@
-import java.net.URI
-
 plugins {
-    java
-    `maven-publish`
-    signing
+    id("java")
+    id("maven-publish")
+    id("signing")
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 group = "io.github.nottamion"
-version = "0.0.1"
+version = "1.0.0-SNAPSHOT"
+
+object Meta {
+    const val desc = "A Command Library for Paper"
+    const val license = "MIT"
+    const val githubRepo = "notTamion/CommandClip"
+    const val release = "https://s01.oss.sonatype.org/service/local/"
+    const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+}
 
 repositories {
     mavenCentral()
@@ -21,14 +28,6 @@ dependencies {
 java {
     withSourcesJar()
     withJavadocJar()
-}
-
-object Meta {
-    const val desc = "A Command Library for Paper"
-    const val license = "MIT"
-    const val githubRepo = "notTamion/CommandClip"
-    const val release = "https://s01.oss.sonatype.org/service/local/"
-    const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
 publishing {
@@ -55,15 +54,9 @@ publishing {
                     }
                 }
                 scm {
-                    url.set(
-                            "https://github.com/${Meta.githubRepo}"
-                    )
-                    connection.set(
-                            "scm:git:git://github.com/${Meta.githubRepo}.git"
-                    )
-                    developerConnection.set(
-                            "scm:git:git://github.com/${Meta.githubRepo}.git"
-                    )
+                    url.set("https://github.com/${Meta.githubRepo}")
+                    connection.set("scm:git:git://github.com/${Meta.githubRepo}.git")
+                    developerConnection.set("scm:git:git://github.com/${Meta.githubRepo}.git")
                 }
                 issueManagement {
                     url.set("https://github.com/${Meta.githubRepo}/issues")
@@ -71,19 +64,18 @@ publishing {
             }
         }
     }
+}
+
+nexusPublishing {
     repositories {
-        maven {
-            name = "OSSRH"
-            url = URI("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = project.properties["ossrhUsername"].toString()
-                password = project.properties["ossrhPassword"].toString()
-            }
+        sonatype {
+            nexusUrl.set(uri(Meta.release))
+            snapshotRepositoryUrl.set(uri(Meta.snapshot))
         }
     }
 }
 
 signing {
     useGpgCmd()
-    sign(publishing.publications["maven"])
+    sign(publishing.publications)
 }

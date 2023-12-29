@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class GenericCommand {
+abstract class GenericCommand {
 
     String usage;
     String permission;
