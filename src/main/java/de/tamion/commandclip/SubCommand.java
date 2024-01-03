@@ -1,44 +1,52 @@
 package de.tamion.commandclip;
 
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+
 public class SubCommand extends GenericCommand {
+
     protected String name;
     public SubCommand(String name) {
         this.name = name;
     }
 
     @Override
-    public SubCommand usage(String usage) {
-        return (SubCommand) super.usage(usage);
-    }
-
-    @Override
-    public SubCommand permission(String permission) {
+    public @NotNull SubCommand permission(String permission) {
         return (SubCommand) super.permission(permission);
     }
 
     @Override
-    public SubCommand permission(String permission, String permissionMessage) {
+    public @NotNull SubCommand permission(String permission, String permissionMessage) {
         return (SubCommand) super.permission(permission, permissionMessage);
     }
 
     @Override
-    public SubCommand testArgs(ArgTester tester) {
+    public @NotNull SubCommand testArgs(ArgTester tester) {
         return (SubCommand) super.testArgs(tester);
     }
 
     @Override
-    public SubCommand subCommand(String name, SubCommandBuilder command) {
-        return (SubCommand) super.subCommand(name, command);
+    public @NotNull SubCommand subCommand(SubCommand subCommand) {
+        return (SubCommand) super.subCommand(subCommand);
     }
 
     @Override
-    public SubCommand execute(ExecutionLogic logic) {
-        return (SubCommand) super.execute(logic);
+    public @NotNull SubCommand executes(ExecutionLogic logic) {
+        return (SubCommand) super.executes(logic);
     }
 
     @Override
-    public SubCommand tabComplete(TabCompletionLogic logic) {
-        return (SubCommand) super.tabComplete(logic);
+    public @NotNull SubCommand execute(CommandSender sender, String alias, String[] args) {
+        return (SubCommand) super.execute(sender, alias, args);
     }
 
+    @Override
+    public @NotNull SubCommand tabCompletes(TabCompletionLogic logic) {
+        return (SubCommand) super.tabCompletes(logic);
+    }
+
+    @Override
+    public @NotNull SubCommand tabComplete(CommandSender sender, String alias, String[] args) {
+        return (SubCommand) super.tabComplete(sender, alias, args);
+    }
 }

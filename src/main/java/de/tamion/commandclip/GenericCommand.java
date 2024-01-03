@@ -8,7 +8,6 @@ import java.util.List;
 
 abstract class GenericCommand {
 
-    String usage;
     String permission;
     String permissionMessage = "You aren't allowed to execute this Command";
     ArgTester argTester;
@@ -17,24 +16,12 @@ abstract class GenericCommand {
     TabCompletionLogic tabCompletionLogic;
 
     /**
-     * Sets your own usage for the command. This will be sent to the user
-     * if the ArgTester returns false or there is no ExecutionLogic set
-     * for this Command.
-     *
-     * @param usage the usage for the command
-     * @return the current command to make further changes
-     */
-    public GenericCommand usage(String usage) {
-        this.usage = usage;
-        return this;
-    }
-
-    /**
      * Sets the permission required to execute this command.
      *
      * @param permission the permission required
      * @return the current command to make further changes
      */
+    @NotNull
     public GenericCommand permission(String permission) {
         this.permission = permission;
         return this;
@@ -48,6 +35,7 @@ abstract class GenericCommand {
      * @param permissionMessage the message sent
      * @return the current command to make further changes
      */
+    @NotNull
     public GenericCommand permission(String permission, String permissionMessage) {
         this.permission = permission;
         this.permissionMessage = permissionMessage;
@@ -60,6 +48,7 @@ abstract class GenericCommand {
      * @param tester the tester used
      * @return the current command to make further changes
      */
+    @NotNull
     public GenericCommand testArgs(ArgTester tester) {
         this.argTester = tester;
         return this;
@@ -71,11 +60,24 @@ abstract class GenericCommand {
      * @param logic the logic executed
      * @return the current command to make further changes
      */
-    public GenericCommand execute(ExecutionLogic logic) {
+    @NotNull
+    public GenericCommand executes(ExecutionLogic logic) {
         this.executionLogic = logic;
         return this;
     }
 
+    /**
+     * Executes the ExecutionLogic if set
+     *
+     * @param sender the CommandSender
+     * @param args truncated Args to not include subcommands
+     * @return the current command to make further changes
+     */
+    @NotNull
+    public GenericCommand execute(CommandSender sender, String alias, String[] args) {
+        this.executionLogic.execute(sender, alias, args);
+        return this;
+    }
 
     /**
      * Sets the Logic executed when a user is trying to tab complete.
@@ -83,20 +85,33 @@ abstract class GenericCommand {
      * @param logic the logic executed
      * @return the current command to make further changes
      */
-    public GenericCommand tabComplete(TabCompletionLogic logic) {
+    @NotNull
+    public GenericCommand tabCompletes(TabCompletionLogic logic) {
         this.tabCompletionLogic = logic;
+        return this;
+    }
+
+    /**
+     * Executes the TabCompletionLogic if set
+     *
+     * @param sender the CommandSender
+     * @param args truncated Args to not include subcommands
+     * @return the current command to make further changes
+     */
+    @NotNull
+    public GenericCommand tabComplete(CommandSender sender, String alias, String[] args) {
+        this.tabCompletionLogic.tabComplete(sender, alias, args);
         return this;
     }
 
     /**
      * Adds the provided SubCommand to this command
      *
-     * @param name name of the subcommand
-     * @param command the subcommand
+     * @param subCommand the subcommand
      * @return the current command to make further changes
      */
-    public GenericCommand subCommand(String name, SubCommandBuilder command) {
-        SubCommand subCommand = command.build(new SubCommand(name).permission(this.permission));
+    @NotNull
+    public GenericCommand subCommand(SubCommand subCommand) {
         this.subCommands.put(subCommand.name, subCommand);
         return this;
     }
@@ -107,13 +122,14 @@ abstract class GenericCommand {
          * The Logic that gets run when a user executes the command
          *
          * @param sender the CommandSender
+         * @param alias the alias used to call the command
          * @param args truncated Args to not include subcommands
          */
-        void execute(CommandSender sender, String[] args);
+        void execute(CommandSender sender, String alias, String[] args);
     }
 
     /**
-     * See {@link #tabComplete(TabCompletionLogic)}
+     * See {@link #tabComplete(CommandSender, String, String[])}
      */
     public interface TabCompletionLogic {
 
@@ -121,34 +137,24 @@ abstract class GenericCommand {
          * The Logic that gets run when a user tries to tab complete
          *
          * @param sender the CommandSender
+         * @param alias the alias used to call the command
          * @param args truncated Args to not include subcommands
          * @return the completions displayed to the user
          */
-        @NotNull List<String> tabComplete(CommandSender sender, String[] args);
+        @NotNull List<String> tabComplete(CommandSender sender, String alias, String[] args);
     }
 
     /**
-     * See {@link #build(SubCommand)}
-     */
-    public interface SubCommandBuilder {
-
-        /**
-         *
-         * @param subCommand a pre created subcommand with name set and permission inherited from parent command
-         * @return the modified SubCommand
-         */
-        @NotNull SubCommand build(SubCommand subCommand);
-    }
-
-    /**
-     * See {@link #test(String[])}
+     * See {@link #test(String, String[])}
      */
     public interface ArgTester {
         /**
+         * The Logic that gets run when a user tries to execute a command
          *
+         * @param alias the alias used to call the command
          * @param args truncated Args to not include subcommands
-         * @return if the arguments are correct and the command may be executed
+         * @return null if Args passed test or usage String to be sent to the user
          */
-        boolean test(String[] args);
+        String test(String alias, String[] args);
     }
 }

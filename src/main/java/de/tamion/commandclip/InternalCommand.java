@@ -27,25 +27,23 @@ class InternalCommand extends Command {
             commandStack.add(args[0]);
         }
 
-        // If the command doesn't have Execution Logic then send back usage
         if (command.executionLogic == null) {
-            sender.sendMessage("/" + commandLabel + " " + String.join(" ", commandStack) + (commandStack.isEmpty() ? "" : " ") + (command.usage == null ? command.subCommands.keySet() : command.usage));
+            sender.sendMessage("/" + commandLabel + " " + String.join(" ", commandStack) + (commandStack.isEmpty() ? "" : " ") + command.subCommands.keySet());
             return false;
         }
+
         if(command.permission != null && !sender.hasPermission(command.permission)) {
             sender.sendMessage(command.permissionMessage);
             return false;
         }
-        if(command.argTester != null && !command.argTester.test(args)) {
-            if (command.usage == null) {
-                sender.sendMessage("Invalid Arguments");
-            } else {
-                sender.sendMessage("/" + commandLabel + " " + (commandStack.isEmpty() ? "" : String.join(" ", commandStack) + " ") + (!command.subCommands.isEmpty() ? command.subCommands.keySet() + " / " : "") + command.usage);
-            }
+
+        String usage;
+        if(command.argTester != null && (usage = command.argTester.test(commandLabel, args)) != null) {
+            sender.sendMessage(usage);
             return false;
         }
-        // Execute Execution Logic
-        command.executionLogic.execute(sender, args);
+
+        command.executionLogic.execute(sender, commandLabel, args);
         return true;
     }
 
@@ -58,8 +56,9 @@ class InternalCommand extends Command {
 
         List<String> completions = new ArrayList<>();
         if (command.tabCompletionLogic != null) {
-            completions.addAll(command.tabCompletionLogic.tabComplete(sender, args));
+            completions.addAll(command.tabCompletionLogic.tabComplete(sender, alias, args));
         }
+
         completions.addAll(command.subCommands.entrySet().stream().filter(subCommandEntry -> subCommandEntry.getValue().permission == null || sender.hasPermission(subCommandEntry.getValue().permission)).map(Map.Entry::getKey).toList());
         return completions;
     }

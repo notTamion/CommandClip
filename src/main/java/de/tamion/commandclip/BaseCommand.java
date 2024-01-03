@@ -1,7 +1,10 @@
 package de.tamion.commandclip;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,11 +22,6 @@ public class BaseCommand extends GenericCommand {
     public BaseCommand(String name, JavaPlugin plugin) {
         this.internalCommand = new InternalCommand(name, this);
         this.plugin = plugin;
-    }
-
-    @Override
-    public BaseCommand usage(String usage) {
-        return (BaseCommand) super.usage(usage);
     }
 
     /**
@@ -74,33 +72,54 @@ public class BaseCommand extends GenericCommand {
         return this;
     }
 
-    public BaseCommand permission(String permission) {
+    public @NotNull BaseCommand permission(String permission) {
         return (BaseCommand) super.permission(permission);
     }
 
     @Override
-    public BaseCommand permission(String permission, String permissionMessage) {
+    public @NotNull BaseCommand permission(String permission, String permissionMessage) {
         return (BaseCommand) super.permission(permission, permissionMessage);
     }
 
     @Override
-    public BaseCommand testArgs(ArgTester tester) {
+    public @NotNull BaseCommand testArgs(ArgTester tester) {
         return (BaseCommand) super.testArgs(tester);
     }
 
     @Override
-    public BaseCommand subCommand(String name, SubCommandBuilder command) {
-        super.subCommand(name, command);
+    public @NotNull BaseCommand subCommand(SubCommand subCommand) {
+        super.subCommand(subCommand);
         this.internalCommand.setUsage("/" + this.internalCommand.getName() + " " + this.subCommands.keySet());
         return this;
     }
+
     @Override
-    public BaseCommand execute(ExecutionLogic logic) {
-        return (BaseCommand) super.execute(logic);
+    public @NotNull BaseCommand executes(ExecutionLogic logic) {
+        return (BaseCommand) super.executes(logic);
     }
+
     @Override
-    public BaseCommand tabComplete(TabCompletionLogic logic) {
-        return (BaseCommand) super.tabComplete(logic);
+    public @NotNull BaseCommand execute(CommandSender sender, String alias, String[] args) {
+        return (BaseCommand) super.execute(sender, alias, args);
+    }
+
+    @Override
+    public @NotNull BaseCommand tabCompletes(TabCompletionLogic logic) {
+        return (BaseCommand) super.tabCompletes(logic);
+    }
+
+    @Override
+    public @NotNull BaseCommand tabComplete(CommandSender sender, String alias, String[] args) {
+        return (BaseCommand) super.tabComplete(sender, alias, args);
+    }
+
+    /**
+     * Gets the bukkit command for you to make further changes
+     *
+     * @return the internal bukkit command object
+     */
+    public Command internalCommand() {
+        return this.internalCommand;
     }
 
     /**
@@ -111,6 +130,4 @@ public class BaseCommand extends GenericCommand {
     public boolean register() {
         return Bukkit.getServer().getCommandMap().register(this.plugin.getName(), internalCommand);
     }
-
-
 }

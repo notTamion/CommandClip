@@ -6,10 +6,10 @@ plugins {
 }
 
 group = "io.github.nottamion"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 object Meta {
-    const val desc = "A Command Library for Paper"
+    const val desc = "A Command Framework for Bukkit Plugins"
     const val license = "MIT"
     const val githubRepo = "notTamion/CommandClip"
     const val release = "https://s01.oss.sonatype.org/service/local/"
