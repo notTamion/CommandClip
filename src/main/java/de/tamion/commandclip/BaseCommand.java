@@ -123,11 +123,37 @@ public class BaseCommand extends GenericCommand {
     }
 
     /**
+     * Searches for SubCommands and executes the correct ExecutionLogic.
+     *
+     * @param sender the CommandSender
+     * @param alias The alias used to call the command
+     * @param args truncated Args to not include subcommands
+     * @return the current command to make further changes
+     */
+    public BaseCommand executeCommand(CommandSender sender, String alias, String[] args) {
+        this.internalCommand.execute(sender, alias, args);
+        return this;
+    }
+
+    /**
+     * Searches for SubCommands and executes the correct TabCompletionLogic.
+     *
+     * @param sender the CommandSender
+     * @param alias The alias used to call the command
+     * @param args truncated Args to not include subcommands
+     * @return the completions returned by the TabCompletionLogic
+     */
+    public List<String> tabCompleteCommand(CommandSender sender, String alias, String[] args) {
+        return this.internalCommand.tabComplete(sender, alias, args);
+    }
+
+    /**
      * Registers the command to the Servers CommandMap
      *
-     * @return if the command was successfully registered
+     * @return the current command to make further changes
      */
-    public boolean register() {
-        return Bukkit.getServer().getCommandMap().register(this.plugin.getName(), internalCommand);
+    public BaseCommand register() {
+        Bukkit.getServer().getCommandMap().register(this.plugin.getName(), internalCommand);
+        return this;
     }
 }

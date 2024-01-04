@@ -70,6 +70,7 @@ abstract class GenericCommand {
      * Executes the ExecutionLogic if set
      *
      * @param sender the CommandSender
+     * @param alias The alias used to call the command
      * @param args truncated Args to not include subcommands
      * @return the current command to make further changes
      */
@@ -95,6 +96,7 @@ abstract class GenericCommand {
      * Executes the TabCompletionLogic if set
      *
      * @param sender the CommandSender
+     * @param alias The alias used to call the command
      * @param args truncated Args to not include subcommands
      * @return the current command to make further changes
      */
