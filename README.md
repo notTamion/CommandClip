@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.github.nottamion:commandclip:1.0.0")
+    compileOnly("io.github.nottamion:commandclip:1.1.0")
 }
 ```
 
@@ -20,7 +20,7 @@ dependencies {
 <dependency>
     <groupId>io.github.nottamion</groupId>
     <artifactId>commandclip</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -29,7 +29,7 @@ for you. This also removes the need to shade the framework into your plugin jar.
 ##### plugin.yml
 ```yaml
 libraries:
-  - io.github.nottamion:commandclip:1.0.0
+  - io.github.nottamion:commandclip:1.1.0
 ```
 
 ## Usage
@@ -46,7 +46,7 @@ new BaseCommand("hello", this)
             commandSender.sendMessage(s + " there " + strings[0]);
         })
         .tabCompletes((commandSender, s, strings) -> strings.length == 1 ? Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(): List.of())
-        .testArgs((s, strings) -> {
+        .testArgs((commandSender, s, strings) -> {
             if (strings.length != 1)
                 return "Please provide a valid playername";
             if (!Bukkit.getOnlinePlayers().stream().map(player -> player.getName()).toList().contains(strings[0]))
