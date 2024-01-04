@@ -38,7 +38,7 @@ class InternalCommand extends Command {
         }
 
         String usage;
-        if(command.argTester != null && (usage = command.argTester.test(commandLabel, args)) != null) {
+        if(command.argTester != null && (usage = command.argTester.test(sender, commandLabel, args)) != null) {
             sender.sendMessage(usage);
             return false;
         }

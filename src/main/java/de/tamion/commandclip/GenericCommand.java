@@ -145,16 +145,17 @@ abstract class GenericCommand {
     }
 
     /**
-     * See {@link #test(String, String[])}
+     * See {@link #test(CommandSender, String, String[])}
      */
     public interface ArgTester {
         /**
          * The Logic that gets run when a user tries to execute a command
          *
+         * @param sender the CommandSender
          * @param alias the alias used to call the command
          * @param args truncated Args to not include subcommands
          * @return null if Args passed test or usage String to be sent to the user
          */
-        String test(String alias, String[] args);
+        String test(CommandSender sender, String alias, String[] args);
     }
 }
