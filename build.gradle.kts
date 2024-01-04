@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.github.nottamion"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 
 object Meta {
     const val desc = "A Command Framework for Bukkit Plugins"

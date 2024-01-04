@@ -1,16 +1,21 @@
-# CommandClip
+# CommandClip [![CommandClip Build Status](https://img.shields.io/github/actions/workflow/status/notTamion/CommandClip/publish.yml)](https://github.com/notTamion/CommandClip/actions)
 A Command Framework for Bukkit Plugins
 
+Bukkit plugin.yml:
 ```yaml
 libraries:
   - io.github.nottamion:commandclip:1.0.0
 ```
+
+Gradle:
 ```kotlin
 compileOnly("io.github.nottamion:commandclip:1.0.0")
 ```
 
 To start create a new BaseCommand and just look at the methods it contains. Everything you need to 
 know should be in the javadocs.
+
+I will make proper docs once i have time
 
 Here is an example:
 ```java
